@@ -23,7 +23,7 @@ const QuestionNew = ({ dispatch }) => {
     return { optionOne, optionTwo };
   };
 
-  const resetFormData = (formData) => {
+  const resetFormData = () => {
     setOptionOne("");
     setOptionTwo("");
   };
@@ -32,9 +32,7 @@ const QuestionNew = ({ dispatch }) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const { optionOne, optionTwo } = getFormData(formData);
-    dispatch(
-      handleAddQuestion({ optionOneText: optionOne, optionTwoText: optionTwo })
-    );
+    dispatch(handleAddQuestion({ optionOneText: optionOne, optionTwoText: optionTwo }));
     resetFormData();
     navigate("/");
   };

@@ -32,6 +32,7 @@ function App({ dispatch }) {
             <Route path="/new" element={<QuestionNew />} />
           </Route>
         )}
+        {!authedUser && <Route path="/" exact element={<Home />} />}
         <Route path="*" element={<PageNotFound />} />
         <Route path="/page-not-found" element={<PageNotFound />} />
       </Routes>

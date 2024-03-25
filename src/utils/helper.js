@@ -17,15 +17,19 @@ export function setAuthedUserToLocalStorage(authedUserID) {
 
 export function formatQuestion(question, authedUserID) {
   const { id, author, timestamp, optionOne, optionTwo } = question;
+  const hasAnwered = optionOne.votes.includes(authedUserID) || optionTwo.votes.includes(authedUserID);
+  let choseOption;
+  if (hasAnwered) {
+    choseOption = optionOne.votes.includes(authedUserID) ? "option one" : "option two";
+  }
   return {
     id,
     author,
     timestamp,
     optionOne,
     optionTwo,
-    hasAnwered:
-      optionOne.votes.includes(authedUserID) ||
-      optionTwo.votes.includes(authedUserID),
+    hasAnwered,
+    choseOption,
   };
 }
 

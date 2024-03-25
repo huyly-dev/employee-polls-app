@@ -1,5 +1,6 @@
 import { _saveQuestion, _saveQuestionAnswer } from "../utils/_DATA";
 import { hideLoading, showLoading } from "./shared";
+import { updateAnswerUsers, updateQuestionUsers } from "./users";
 
 export const RECEIVE_QUESTIONS = "RECEIVE_QUESTIONS";
 export const ADD_QUESTION = "ADD_QUESTION";
@@ -22,7 +23,7 @@ function addQuestion(question) {
 function saveQuestionAnswer(answer) {
   return {
     type: SAVE_QUESTION_ANSWER,
-    answer
+    answer,
   };
 }
 
@@ -31,8 +32,9 @@ export function handleAddQuestion(question) {
     const { authedUser } = getState();
     dispatch(showLoading());
 
-    return _saveQuestion({...question, author: authedUser})
+    return _saveQuestion({ ...question, author: authedUser })
       .then((question) => dispatch(addQuestion(question)))
+      .then(({ question }) => dispatch(updateQuestionUsers({ qid: question.id, authedUser })))
       .then(() => dispatch(hideLoading()));
   };
 }
@@ -40,7 +42,8 @@ export function handleAddQuestion(question) {
 export function handleSaveQuestionAnswer(answer) {
   return (dispatch, getState) => {
     const { authedUser } = getState();
-    return _saveQuestionAnswer({...answer, authedUser})
-    .then(() => dispatch(saveQuestionAnswer({...answer, authedUser})))
-  }
+    return _saveQuestionAnswer({ ...answer, authedUser })
+      .then(() => dispatch(saveQuestionAnswer({ ...answer, authedUser })))
+      .then(() => dispatch(updateAnswerUsers({ authedUser, ...answer })));
+  };
 }

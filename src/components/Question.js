@@ -18,6 +18,7 @@ const Question = ({ question }) => {
         variant="outlined"
         sx={{ marginTop: 2 }}
         onClick={() => navigate(`/question/${question.id}`)}
+        data-testid="btn-add-question"
       >
         Show
       </Button>
