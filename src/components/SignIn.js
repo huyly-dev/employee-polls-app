@@ -9,9 +9,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { setAuthedUserToLocalStorage } from "../utils/helper";
 import { setAuthedUser } from "../actions/authedUser";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
@@ -19,10 +18,11 @@ const SignIn = ({ users, dispatch, authedUser }) => {
   const [error, setError] = useState("");
   const [isDisabledBtn, setIsDisabledBtn] = useState(true);
   let navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     authedUser && navigate("/");
-  })
+  });
   const getFormData = (currentTarget) => {
     const formData = new FormData(currentTarget);
     const userName = formData.get("userName");
@@ -45,9 +45,8 @@ const SignIn = ({ users, dispatch, authedUser }) => {
       return;
     }
 
-    setAuthedUserToLocalStorage(userName);
     dispatch(setAuthedUser(userName));
-    navigate("/");
+    navigate(location.state ?? "/");
   };
 
   const handleChange = (event) => {
@@ -79,13 +78,7 @@ const SignIn = ({ users, dispatch, authedUser }) => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            onChange={handleChange}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={handleSubmit} onChange={handleChange} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -112,13 +105,7 @@ const SignIn = ({ users, dispatch, authedUser }) => {
               </Typography>
             }
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={isDisabledBtn}
-            >
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isDisabledBtn}>
               Sign In
             </Button>
           </Box>

@@ -7,32 +7,30 @@ import QuestionNew from "./components/QuestionNew";
 import LeaderBoard from "./components/LeaderBoard";
 import SignIn from "./components/SignIn";
 import { handleInitialData } from "./actions/shared";
-import { setAuthedUser } from "./actions/authedUser";
-import { getAuthedUser } from "./utils/helper";
 import QuestionDetail from "./components/QuestionDetail";
 import PageNotFound from "./components/PageNotFound";
+import { withLoggedIn } from "./utils/helper";
 
-function App({ dispatch }) {
-  dispatch(setAuthedUser(getAuthedUser()));
-  const authedUser = getAuthedUser();
-
+function App({ dispatch, authedUser }) {
   useEffect(() => {
     dispatch(handleInitialData());
   }, []);
 
+  const HomeRoute = withLoggedIn(Home, authedUser);
+  const QuestionDetailRoute = withLoggedIn(QuestionDetail, authedUser);
+  const LeaderBoardRoute = withLoggedIn(LeaderBoard, authedUser);
+  const QuestionNewRoute = withLoggedIn(QuestionNew, authedUser);
+
   return (
     <div className="App">
       <Routes>
-        <Route path="/sign-in" exact element={<SignIn />} />
-        {authedUser && (
-          <Route element={<LayOut />}>
-            <Route path="/" exact element={<Home />} />
-            <Route path="/question/:question_id" element={<QuestionDetail />} />
-            <Route path="/leader-board" element={<LeaderBoard />} />
-            <Route path="/new" element={<QuestionNew />} />
-          </Route>
-        )}
-        {!authedUser && <Route path="/" exact element={<Home />} />}
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route element={<LayOut />}>
+          <Route path="/" exact element={<HomeRoute />} />
+          <Route path="/question/:question_id" element={<QuestionDetailRoute />} />
+          <Route path="/leader-board" element={<LeaderBoardRoute />} />
+          <Route path="/new" element={<QuestionNewRoute />} />
+        </Route>
         <Route path="*" element={<PageNotFound />} />
         <Route path="/page-not-found" element={<PageNotFound />} />
       </Routes>
